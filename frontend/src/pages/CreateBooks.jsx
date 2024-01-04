@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../components/BackButton';
 import Spinner from '../components/Spinner';
+import { useSnackbar } from 'notistack';
 
 const CreateBooks = () => {
   const [title, setTitle] = useState('');
@@ -11,6 +12,8 @@ const CreateBooks = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSaveBook = () => {
     const data = {
       title, 
@@ -22,11 +25,12 @@ const CreateBooks = () => {
     .post('http://localhost:5555/books', data)
     .then(()=> {
       setLoading(false);
+      enqueueSnackbar('Book created successfully', {variant: 'success'})
       navigate('/');
     })
     .catch((error) => {
       setLoading(false);
-      alert('An error happened');
+      enqueueSnackbar('Error', {variant: 'error'})
       console.log(error);
     })
   }
@@ -49,14 +53,6 @@ const CreateBooks = () => {
           <input type='text'
           value={author}
           onChange={(e)=> setAuthor(e.target.value)}
-          className='border-2 border-gray-500 px-4 py-2w-full'
-          />
-        </div>
-        <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'> Title</label>
-          <input type='text'
-          value={title}
-          onChange={(e)=> setTitle(e.target.value)}
           className='border-2 border-gray-500 px-4 py-2w-full'
           />
         </div>
